@@ -6,6 +6,7 @@ I don't promise that these are optimized, but they work!
 Limited to arrays of strings, but the code can be easily changed to accept any type.
 
 ## Performance
+**Trials**
 | type	| n	| ms	| us / n |
 |:--:|:--:|:--:|:--:|
 | intersect	 | 10	 | 0.02	 | 2.32 | 
@@ -37,7 +38,7 @@ Limited to arrays of strings, but the code can be easily changed to accept any t
 | distinct	 | 1000000	 | 1551.91	 | 1.55 | 
 | distinct	 | 10000000	 | 15942.66	 | 1.59 | 
 
-
+**Averages**
 | type	| avg. us / n |
 |:--:|:--:|
 | union	| 2.032 |
