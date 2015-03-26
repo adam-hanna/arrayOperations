@@ -3,6 +3,7 @@
 // Intersect(a1, a2) >> [2 4]
 func IntersectString(args ...[]string) []string {
 	// create a map to count all the instances of the strings
+	arrLength := len(args)
 	tempMap := make(map[string]int)
 	for _, arg := range args {
 		tempArr := Distinct(arg)
@@ -19,7 +20,7 @@ func IntersectString(args ...[]string) []string {
 	// find the keys equal to the length of the input args
 	tempArray := make([]string, 0)
 	for key := range tempMap {
-		if tempMap[key] == len(args) {
+		if tempMap[key] == arrLength {
 			tempArray = append(tempArray, key)
 		}
 	}
