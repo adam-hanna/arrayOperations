@@ -1,20 +1,22 @@
+
 // find the intersection of two arrays.
-// e.x. a1 = [1 2 2 4 6]; a2 = [2 4 5]
+// e.g. a1 = [1 2 2 4 6]; a2 = [2 4 5]
 // Intersect(a1, a2) >> [2 4]
 func IntersectString(args ...[]string) []string {
-	// create a map to count all the instances of the strings
+	// create a map to count all the instances of the strings 
 	tempMap := make(map[string]int)
 	for _, arg := range args {
-		for idx := range arg {
-			if _, ok := tempMap[arg[idx]]; ok {
-				tempMap[arg[idx]]++
+		tempArr := Distinct(arg)
+		for idx := range tempArr {
+			if _, ok := tempMap[tempArr[idx]]; ok {
+				tempMap[tempArr[idx]]++
 			} else {
-				tempMap[arg[idx]] = 1
+				tempMap[tempArr[idx]] = 1
 			}
 		}
 	}
 
-	// find the keys equal to the length of the input args
+	// find the keys eqal to the length of the input args
 	tempArray := make([]string, 0)
 	for key := range tempMap {
 		if tempMap[key] == len(args) {
@@ -26,7 +28,7 @@ func IntersectString(args ...[]string) []string {
 }
 
 // find the union of two arrays.
-// e.x. a1 = [1 2 2 4 6]; a2 = [2 4 5]
+// e.g. a1 = [1 2 2 4 6]; a2 = [2 4 5]
 // Union(a1, a2) >> [1 2 4 5 6]
 func UnionString(args ...[]string) []string {
 	tempMap := make(map[string]uint8)
@@ -45,22 +47,25 @@ func UnionString(args ...[]string) []string {
 }
 
 // find the difference of two arrays.
-// e.x. a1 = [1 2 2 4 6]; a2 = [2 4 5]
+// e.g. a1 = [1 2 2 4 6]; a2 = [2 4 5]
 // Difference(a1, a2) >> [5 6]
 func DifferenceString(args ...[]string) []string {
-	// craete a map to count all the instances of the strings
-	tempMap := make(map[string]int)
+	// hold the values of the arrays;
+	// the first map of uint64 represents the index of args
+	// the second map of strings represents that values in the arg arrays
+	tempMap := make(map[string]int)	
 	for _, arg := range args {
-		for idx := range arg {
-			if _, ok := tempMap[arg[idx]]; ok {
-				tempMap[arg[idx]]++
+		tempArr := Distinct(arg)
+		for idx := range tempArr {
+			if _, ok := tempMap[tempArr [idx]]; ok {
+				tempMap[tempArr [idx]]++
 			} else {
-				tempMap[arg[idx]] = 1
+				tempMap[tempArr [idx]] = 1
 			}
 		}
 	}
 
-	// find the keys with only 1 instance
+	// write the final val of the diffMap to an array and return
 	tempArray := make([]string, 0)
 	for key := range tempMap {
 		if tempMap[key] == 1 {
@@ -72,7 +77,7 @@ func DifferenceString(args ...[]string) []string {
 }
 
 // Remove duplicate values from one array.
-// e.x. a1 = [1 2 2 4 6]
+// e.g. a1 = [1 2 2 4 6]
 // Distinct(a1) >> [1 2 4 6]
 func Distinct(arg []string) []string {
 	tempMap := make(map[string]uint8)
