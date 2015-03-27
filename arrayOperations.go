@@ -19,8 +19,8 @@ func IntersectString(args ...[]string) []string {
 
 	// find the keys equal to the length of the input args
 	tempArray := make([]string, 0)
-	for key := range tempMap {
-		if tempMap[key] == arrLength {
+	for key, val := range tempMap {
+		if val == arrLength {
 			tempArray = append(tempArray, key)
 		}
 	}
@@ -71,8 +71,8 @@ func DifferenceString(args ...[]string) []string {
 
 	// write the final val of the diffMap to an array and return
 	tempArray := make([]string, 0)
-	for key := range tempMap {
-		if tempMap[key] == 1 {
+	for key, val := range tempMap {
+		if val == 1 {
 			tempArray = append(tempArray, key)
 		}
 	}
