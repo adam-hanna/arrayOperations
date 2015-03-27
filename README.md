@@ -6,6 +6,9 @@ I don't promise that these are optimized, but they work!
 Limited to arrays of strings, but the code can be easily changed to accept any type.
 
 ## Performance
+
+Here's how well it performs in an ubuntu vm on my personal laptop. vm was given 6 cores (3 virtual) @ 2.40 GHz and 8 GB of ram.
+
 **Trials**
 
 | type	| n	| ms	| us / n |
