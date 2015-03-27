@@ -6,7 +6,7 @@ func IntersectString(args ...[]string) []string {
 	arrLength := len(args)
 	tempMap := make(map[string]int)
 	for _, arg := range args {
-		tempArr := Distinct(arg)
+		tempArr := DistinctString(arg)
 		for idx := range tempArr {
 			// how many times have we encountered this elem?
 			if _, ok := tempMap[tempArr[idx]]; ok {
@@ -58,7 +58,7 @@ func DifferenceString(args ...[]string) []string {
 	// create a temporary map to hold the contents of the arrays
 	tempMap := make(map[string]int)
 	for _, arg := range args {
-		tempArr := Distinct(arg)
+		tempArr := DistinctString(arg)
 		for idx := range tempArr {
 			// how many times have we encountered this elem?
 			if _, ok := tempMap[tempArr[idx]]; ok {
@@ -83,7 +83,7 @@ func DifferenceString(args ...[]string) []string {
 // Remove duplicate values from one array.
 // e.g. a1 = [1 2 2 4 6]
 // Distinct(a1) >> [1 2 4 6]
-func Distinct(arg []string) []string {
+func DistinctString(arg []string) []string {
 	tempMap := make(map[string]uint8)
 
 	for idx := range arg {
