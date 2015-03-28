@@ -26,6 +26,7 @@ Limited to arrays of strings and uint64 (for now), but the code can be easily ch
 		<dd>DistinctString(a1) >> ["1" "2" "4" "6"]
 </dl>
 
+## Other Types
 Uint64 functions work the same as string functions, but end in Uint64, e.g. IntersectUint64
 
 ## Performance
