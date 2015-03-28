@@ -7,35 +7,26 @@ Limited to arrays of strings and uint64 (for now), but the code can be easily ch
 
 ## Usage
 
-### string
+<dl>
+	<dt><h3>1. IntersectString(args...[]string) []string</h3>
+		<dd>Find the intersection of two arrays.
+		<dd>e.g. a1 = ["1" "2" "2" "4" "6"]; a2 = ["2" "4" "5"]
+		<dd>IntersectString(a1, a2) >> ["2" "4"]
+	<dt><h3>2. UnionString(args...[]string) []string</h3>
+		<dd>Find the union of two arrays.
+		<dd>e.g. a1 = ["1" "2" "2" "4" "6"]; a2 = ["2" "4" "5"]
+		<dd>UnionString(a1, a2) >> ["1" "2" "4" "5" "6"]
+	<dt><h3>3. DifferenceString(args...[]string) []string</h3>
+		<dd>Find the union of two arrays.
+		<dd>e.g. a1 = ["1" "2" "2" "4" "6"]; a2 = ["2" "4" "5"]
+		<dd>DifferenceString(a1, a2) >> ["5" "6"]
+	<dt><h3>4. DistinctString(args []string) []string</h3>
+		<dd>Remove duplicate values from one array.
+		<dd>e.g. a1 = ["1" "2" "2" "4" "6"];
+		<dd>DistinctString(a1) >> ["1" "2" "4" "6"]
+</dl>
 
-#### IntersectString(args...[]string) []string
-
-Find the intersection of two arrays.
-e.g. a1 = ["1" "2" "2" "4" "6"]; a2 = ["2" "4" "5"]
-IntersectString(a1, a2) >> ["2" "4"]
-
-#### UnionString(args...[]string) []string
-
-Find the union of two arrays.
-e.g. a1 = ["1" "2" "2" "4" "6"]; a2 = ["2" "4" "5"]
-UnionString(a1, a2) >> ["1" "2" "4" "5" "6"]
-
-#### DifferenceString(args...[]string) []string
-
-Find the union of two arrays.
-e.g. a1 = ["1" "2" "2" "4" "6"]; a2 = ["2" "4" "5"]
-DifferenceString(a1, a2) >> ["5" "6"]
-
-#### DistinctString(args []string) []string
-
-Remove duplicate values from one array.
-e.g. a1 = ["1" "2" "2" "4" "6"];
-DistinctString(a1) >> ["1" "2" "4" "6"]
-
-### uint64
-
-Same as string, but functions end in Uint64, e.g. IntersectUint64
+Uint64 functions work the same as string functions, but end in Uint64, e.g. IntersectUint64
 
 ## Performance
 
