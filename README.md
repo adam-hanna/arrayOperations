@@ -3,7 +3,39 @@ Small library for performing union, intersect, difference and distinct operation
 
 I don't promise that these are optimized, but they work!
 
-Limited to arrays of strings, but the code can be easily changed to accept any type.
+Limited to arrays of strings and uint64 (for now), but the code can be easily changed to accept any type.
+
+## Usage
+
+### string
+
+#### IntersectString(args...[]string) []string
+
+Find the intersection of two arrays.
+e.g. a1 = ["1" "2" "2" "4" "6"]; a2 = ["2" "4" "5"]
+IntersectString(a1, a2) >> ["2" "4"]
+
+#### UnionString(args...[]string) []string
+
+Find the union of two arrays.
+e.g. a1 = ["1" "2" "2" "4" "6"]; a2 = ["2" "4" "5"]
+UnionString(a1, a2) >> ["1" "2" "4" "5" "6"]
+
+#### DifferenceString(args...[]string) []string
+
+Find the union of two arrays.
+e.g. a1 = ["1" "2" "2" "4" "6"]; a2 = ["2" "4" "5"]
+DifferenceString(a1, a2) >> ["5" "6"]
+
+#### DistinctString(args []string) []string
+
+Remove duplicate values from one array.
+e.g. a1 = ["1" "2" "2" "4" "6"];
+DistinctString(a1) >> ["1" "2" "4" "6"]
+
+### uint64
+
+Same as string, but functions end in Uint64, e.g. IntersectUint64
 
 ## Performance
 
