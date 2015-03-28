@@ -117,7 +117,7 @@ func IntersectUint64(args ...[]uint64) []uint64 {
 	arrLength := len(args)
 	tempMap := make(map[uint64]int)
 	for _, arg := range args {
-		tempArr := DistinctString(arg)
+		tempArr := DistinctUint64(arg)
 		for idx := range tempArr {
 			// how many times have we encountered this elem?
 			if _, ok := tempMap[tempArr[idx]]; ok {
@@ -169,7 +169,7 @@ func DifferenceUint64(args ...[]uint64) []uint64 {
 	// create a temporary map to hold the contents of the arrays
 	tempMap := make(map[uint64]int)
 	for _, arg := range args {
-		tempArr := DistinctString(arg)
+		tempArr := DistinctUint64(arg)
 		for idx := range tempArr {
 			// how many times have we encountered this elem?
 			if _, ok := tempMap[tempArr[idx]]; ok {
