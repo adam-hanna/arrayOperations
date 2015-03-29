@@ -391,7 +391,7 @@ func DistinctUint64(arg []uint64) []uint64 {
 * To use, un-comment out the packages in import.
 *
 /* *************************************************************** */
-
+/*
 func benchmark() {
 	a1 := make([]string, 0)
 	a2 := make([]string, 0)
@@ -414,3 +414,4 @@ func benchmark() {
 	}
 
 }
+*/
