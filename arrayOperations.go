@@ -139,6 +139,36 @@ func IntersectUint64(args ...[]uint64) []uint64 {
 	return tempArray
 }
 
+// find the intersection of two arrays.
+// e.g. a1 = [1 2 2 4 6]; a2 = [2 4 5]
+// Intersect(a1, a2) >> [2 4]
+func IntersectUint64Arr(arr [][]uint64) []uint64 {
+	// create a map to count all the instances of the strings
+	arrLength := len(arr)
+	tempMap := make(map[uint64]int)
+	for idx1 := range arr {
+		tempArr := DistinctUint64(arr[idx1])
+		for idx2 := range tempArr {
+			// how many times have we encountered this elem?
+			if _, ok := tempMap[tempArr[idx2]]; ok {
+				tempMap[tempArr[idx2]]++
+			} else {
+				tempMap[tempArr[idx2]] = 1
+			}
+		}
+	}
+
+	// find the keys equal to the length of the input args
+	tempArray := make([]uint64, 0)
+	for key, val := range tempMap {
+		if val == arrLength {
+			tempArray = append(tempArray, key)
+		}
+	}
+
+	return tempArray
+}
+
 // find the union of two arrays.
 // e.g. a1 = [1 2 2 4 6]; a2 = [2 4 5]
 // Union(a1, a2) >> [1 2 4 5 6]
