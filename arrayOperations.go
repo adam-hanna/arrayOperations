@@ -1,3 +1,5 @@
+package arrayOperations
+
 /* ***************************************************************
 *
 * THIS SECTION IS FOR STRINGS
