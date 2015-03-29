@@ -1,5 +1,4 @@
-/*
-package main
+package benchmark
 
 import (
 	"arrayOperations"
@@ -10,7 +9,7 @@ import (
 	"time"
 )
 
-func main() {
+func benchmark() {
 	a1 := make([]string, 0)
 	a2 := make([]string, 0)
 
@@ -32,4 +31,3 @@ func main() {
 	}
 
 }
-*/
