@@ -29,7 +29,7 @@ Limited to arrays of strings and uint64 (for now), but the code can be easily ch
 ## Other Types
 Uint64 functions work the same as string functions, but end in Uint64, e.g. IntersectUint64
 
-Furthermore, a multidimensional array can be used as input by adding "Arr" the the end of the function name e.g. IntersectStringArr(arr [][]string) []string
+Furthermore, a multidimensional array can be used as input by adding "Arr" to the end of the function name e.g. IntersectStringArr(arr [][]string) []string
 
 ## Performance
 
