@@ -1,12 +1,12 @@
 package main
 
 import (
-	"fmt"
-	"math"
-	"math/rand"
-	// "strconv"
+	// "fmt"
+	// "math"
+	// "math/rand"
+	// // "strconv"
 	"sort"
-	"time"
+	// "time"
 )
 
 /* ***************************************************************
@@ -503,7 +503,7 @@ func DistinctUint64(arg []uint64) []uint64 {
 * To use, un-comment out the packages in import.
 *
 /* *************************************************************** */
-
+/*
 func main() {
 	aBig := make([][]uint64, 0)
 	a1 := make([]uint64, 0)
@@ -546,3 +546,4 @@ type uintArray []uint64
 func (s uintArray) Len() int           { return len(s) }
 func (s uintArray) Swap(i, j int)      { s[i], s[j] = s[j], s[i] }
 func (s uintArray) Less(i, j int) bool { return s[i] < s[j] }
+*/
