@@ -19,7 +19,7 @@ Limited to arrays of strings and uint64 (for now), but the code can be easily ch
 	<dt><h3>3. DifferenceString(args...[]string) []string</h3>
 		<dd>Find the union of two arrays.
 		<dd>e.g. a1 = ["1" "2" "2" "4" "6"]; a2 = ["2" "4" "5"]
-		<dd>DifferenceString(a1, a2) >> ["5" "6"]
+		<dd>DifferenceString(a1, a2) >> ["1" "5" "6"]
 	<dt><h3>4. DistinctString(args []string) []string</h3>
 		<dd>Remove duplicate values from one array.
 		<dd>e.g. a1 = ["1" "2" "2" "4" "6"];
