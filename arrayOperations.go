@@ -1,13 +1,269 @@
 package arrayOperations
 
 import (
-// "fmt"
-// "math"
-// "math/rand"
-// // "strconv"
-// "sort"
-// "time"
+	"fmt"
+	"reflect"
 )
+
+var tempVal reflect.Value
+
+// Distinct returns the unique vals of a slice
+// [1, 1, 2, 3] >> [1, 2, 3]
+func Distinct(arr interface{}) (reflect.Value, bool) {
+	// create a slice from our input interface
+	slice, ok := takeArg(arr, reflect.Slice)
+	if !ok {
+		return tempVal, ok
+	}
+
+	// put the values of our slice into a map
+	// the key's of the map will be the slice's unique values
+	c := slice.Len()
+	m := make(map[interface{}]bool)
+	for i := 0; i < c; i++ {
+		m[slice.Index(i).Interface()] = true
+	}
+	mapLen := len(m)
+
+	// create the output slice and populate it with the map's keys
+	out := reflect.MakeSlice(reflect.TypeOf(arr), mapLen, mapLen)
+	i := 0
+	for k := range m {
+		v := reflect.ValueOf(k)
+		o := out.Index(i)
+		o.Set(v)
+		i++
+	}
+
+	return out, ok
+}
+
+// ExampleDistinct shows how to use Distinct
+func ExampleDistinct() {
+	var a = []int{1, 1, 2, 3}
+
+	z, ok := Distinct(a)
+	if !ok {
+		fmt.Println("Cannot find distinct")
+	}
+
+	slice, ok := z.Interface().([]int)
+	if !ok {
+		fmt.Println("Cannot convert to slice")
+	}
+	fmt.Println(slice, reflect.TypeOf(slice)) // [1, 2, 3] []int
+}
+
+// Intersect returns a slice of values that are present in all of the input slices
+// [1, 1, 3, 4, 5, 6] & [2, 3, 6] >> [3, 6]
+// [1, 1, 3, 4, 5, 6] >> [1, 3, 4, 5, 6]
+func Intersect(arrs ...interface{}) (reflect.Value, bool) {
+	// create a map to count all the instances of the slice elems
+	arrLength := len(arrs)
+	var kind reflect.Kind
+
+	tempMap := make(map[interface{}]int)
+	for i, arg := range arrs {
+		tempArr, ok := Distinct(arg)
+		if !ok {
+			return tempVal, ok
+		}
+
+		// check to be sure the type hasn't changed
+		if i > 0 && tempArr.Index(0).Kind() != kind {
+			return tempVal, false
+		}
+		kind = tempArr.Index(0).Kind()
+
+		c := tempArr.Len()
+		for idx := 0; idx < c; idx++ {
+			// how many times have we encountered this elem?
+			if _, ok := tempMap[tempArr.Index(idx).Interface()]; ok {
+				tempMap[tempArr.Index(idx).Interface()]++
+			} else {
+				tempMap[tempArr.Index(idx).Interface()] = 1
+			}
+		}
+	}
+
+	// find the keys equal to the length of the input args
+	numElems := 0
+	for _, v := range tempMap {
+		if v == arrLength {
+			numElems++
+		}
+	}
+	out := reflect.MakeSlice(reflect.TypeOf(arrs[0]), numElems, numElems)
+	i := 0
+	for key, val := range tempMap {
+		if val == arrLength {
+			v := reflect.ValueOf(key)
+			o := out.Index(i)
+			o.Set(v)
+			i++
+		}
+	}
+
+	return out, true
+}
+
+// ExampleIntersect shows how to use Intersect
+func ExampleIntersect() {
+	var a = []int{1, 1, 2, 3}
+	var b = []int{2, 4}
+
+	z, ok := Intersect(a, b)
+	if !ok {
+		fmt.Println("Cannot find intersect")
+	}
+
+	slice, ok := z.Interface().([]int)
+	if !ok {
+		fmt.Println("Cannot convert to slice")
+	}
+	fmt.Println(slice, reflect.TypeOf(slice)) // [2] []int
+}
+
+// Union returns a slice that contains the unique values of all the input slices
+// [1, 2, 2, 4, 6] & [2, 4, 5] >> [1, 2, 4, 5, 6]
+// [1, 1, 3, 4, 5, 6] >> [1, 3, 4, 5, 6]
+func Union(arrs ...interface{}) (reflect.Value, bool) {
+	// create a temporary map to hold the contents of the arrays
+	tempMap := make(map[interface{}]uint8)
+	var kind reflect.Kind
+
+	// write the contents of the arrays as keys to the map. The map values don't matter
+	for i, arg := range arrs {
+		tempArr, ok := Distinct(arg)
+		if !ok {
+			return tempVal, ok
+		}
+
+		// check to be sure the type hasn't changed
+		if i > 0 && tempArr.Index(0).Kind() != kind {
+			return tempVal, false
+		}
+		kind = tempArr.Index(0).Kind()
+
+		c := tempArr.Len()
+		for idx := 0; idx < c; idx++ {
+			tempMap[tempArr.Index(idx).Interface()] = 0
+		}
+	}
+
+	// the map keys are now unique instances of all of the array contents
+	mapLen := len(tempMap)
+	out := reflect.MakeSlice(reflect.TypeOf(arrs[0]), mapLen, mapLen)
+	i := 0
+	for key := range tempMap {
+		v := reflect.ValueOf(key)
+		o := out.Index(i)
+		o.Set(v)
+		i++
+	}
+
+	return out, true
+}
+
+// ExampleUnion shows how to use Union
+func ExampleUnion() {
+	var a = []int{1, 1, 2, 3}
+	var b = []int{2, 4}
+
+	z, ok := Union(a, b)
+	if !ok {
+		fmt.Println("Cannot find union")
+	}
+
+	slice, ok := z.Interface().([]int)
+	if !ok {
+		fmt.Println("Cannot convert to slice")
+	}
+	fmt.Println(slice, reflect.TypeOf(slice)) // [1, 2, 3, 4] []int
+}
+
+// Difference returns a slice of values that are only present in one of the input slices
+// [1, 2, 2, 4, 6] & [2, 4, 5] >> [5, 6]
+// [1, 1, 3, 4, 5, 6] >> [1, 3, 4, 5, 6]
+func Difference(arrs ...interface{}) (reflect.Value, bool) {
+	// create a temporary map to hold the contents of the arrays
+	tempMap := make(map[interface{}]int)
+	var kind reflect.Kind
+
+	for i, arg := range arrs {
+		tempArr, ok := Distinct(arg)
+		if !ok {
+			return tempVal, ok
+		}
+
+		// check to be sure the type hasn't changed
+		if i > 0 && tempArr.Index(0).Kind() != kind {
+			return tempVal, false
+		}
+		kind = tempArr.Index(0).Kind()
+
+		c := tempArr.Len()
+		for idx := 0; idx < c; idx++ {
+			// how many times have we encountered this elem?
+			if _, ok := tempMap[tempArr.Index(idx).Interface()]; ok {
+				tempMap[tempArr.Index(idx).Interface()]++
+			} else {
+				tempMap[tempArr.Index(idx).Interface()] = 1
+			}
+		}
+	}
+
+	// write the final val of the diffMap to an array and return
+	numElems := 0
+	for _, v := range tempMap {
+		if v == 1 {
+			numElems++
+		}
+	}
+	out := reflect.MakeSlice(reflect.TypeOf(arrs[0]), numElems, numElems)
+	i := 0
+	for key, val := range tempMap {
+		if val == 1 {
+			v := reflect.ValueOf(key)
+			o := out.Index(i)
+			o.Set(v)
+			i++
+		}
+	}
+
+	return out, true
+}
+
+// ExampleDifference shows how to use Difference
+func ExampleDifference() {
+	var a = []int{1, 1, 2, 3}
+	var b = []int{2, 4}
+
+	z, ok := Difference(a, b)
+	if !ok {
+		fmt.Println("Cannot find difference")
+	}
+
+	slice, ok := z.Interface().([]int)
+	if !ok {
+		fmt.Println("Cannot convert to slice")
+	}
+	fmt.Println(slice, reflect.TypeOf(slice)) // [1, 3] []int
+}
+
+func takeArg(arg interface{}, kind reflect.Kind) (val reflect.Value, ok bool) {
+	val = reflect.ValueOf(arg)
+	if val.Kind() == kind {
+		ok = true
+	}
+	return
+}
+
+/* ***************************************************************
+*
+* THE SECTIONS BELOW ARE DEPRECATED
+*
+/* *************************************************************** */
 
 /* ***************************************************************
 *
@@ -15,9 +271,9 @@ import (
 *
 /* *************************************************************** */
 
-// find the intersection of two arrays.
-// e.g. a1 = [1 2 2 4 6]; a2 = [2 4 5]
-// Intersect(a1, a2) >> [2 4]
+// IntersectString finds the intersection of two arrays.
+//
+// Deprecated: use Intersect instead.
 func IntersectString(args ...[]string) []string {
 	// create a map to count all the instances of the strings
 	arrLength := len(args)
@@ -45,7 +301,9 @@ func IntersectString(args ...[]string) []string {
 	return tempArray
 }
 
-// find the intersection of two arrays using a multidimensional array as inputs
+// IntersectStringArr finds the intersection of two arrays using a multidimensional array as inputs
+//
+// Deprecated: use Intersect instead.
 func IntersectStringArr(arr [][]string) []string {
 	// create a map to count all the instances of the strings
 	arrLength := len(arr)
@@ -73,9 +331,9 @@ func IntersectStringArr(arr [][]string) []string {
 	return tempArray
 }
 
-// find the union of two arrays.
-// e.g. a1 = [1 2 2 4 6]; a2 = [2 4 5]
-// Union(a1, a2) >> [1 2 4 5 6]
+// UnionString finds the union of two arrays.
+//
+// Deprecated: use Union instead.
 func UnionString(args ...[]string) []string {
 	// create a temporary map to hold the contents of the arrays
 	tempMap := make(map[string]uint8)
@@ -96,7 +354,9 @@ func UnionString(args ...[]string) []string {
 	return tempArray
 }
 
-// find the union of two arrays using a multidimensional array as inputs
+// UnionStringArr finds the union of two arrays using a multidimensional array as inputs
+//
+// Deprecated: use Union instead.
 func UnionStringArr(arr [][]string) []string {
 	// create a temporary map to hold the contents of the arrays
 	tempMap := make(map[string]uint8)
@@ -117,9 +377,9 @@ func UnionStringArr(arr [][]string) []string {
 	return tempArray
 }
 
-// find the difference of two arrays.
-// e.g. a1 = [1 2 2 4 6]; a2 = [2 4 5]
-// Difference(a1, a2) >> [5 6]
+// DifferenceString finds the difference of two arrays.
+//
+// Deprecated: use Difference instead.
 func DifferenceString(args ...[]string) []string {
 	// create a temporary map to hold the contents of the arrays
 	tempMap := make(map[string]int)
@@ -146,7 +406,9 @@ func DifferenceString(args ...[]string) []string {
 	return tempArray
 }
 
-// find the difference of two arrays using a multidimensional array as inputs
+// DifferenceStringArr finds the difference of two arrays using a multidimensional array as inputs
+//
+// Deprecated: use Difference instead.
 func DifferenceStringArr(arr [][]string) []string {
 	// create a temporary map to hold the contents of the arrays
 	tempMap := make(map[string]int)
@@ -173,9 +435,9 @@ func DifferenceStringArr(arr [][]string) []string {
 	return tempArray
 }
 
-// Remove duplicate values from one array.
-// e.g. a1 = [1 2 2 4 6]
-// Distinct(a1) >> [1 2 4 6]
+// DistinctString removes duplicate values from one array.
+//
+// Deprecated: use Distinct instead.
 func DistinctString(arg []string) []string {
 	tempMap := make(map[string]uint8)
 
@@ -196,9 +458,9 @@ func DistinctString(arg []string) []string {
 *
 /* *************************************************************** */
 
-// find the intersection of two arrays.
-// e.g. a1 = [1 2 2 4 6]; a2 = [2 4 5]
-// Intersect(a1, a2) >> [2 4]
+// IntersectUint64 finds the intersection of two arrays.
+//
+// Deprecated: use Intersect instead.
 func IntersectUint64(args ...[]uint64) []uint64 {
 	// create a map to count all the instances of the strings
 	arrLength := len(args)
@@ -226,7 +488,9 @@ func IntersectUint64(args ...[]uint64) []uint64 {
 	return tempArray
 }
 
-// find the intersection of two arrays of distinct vals.
+// DistinctIntersectUint64 finds the intersection of two arrays of distinct vals.
+//
+// Deprecated: use Intersect instead.
 func DistinctIntersectUint64(args ...[]uint64) []uint64 {
 	// create a map to count all the instances of the strings
 	arrLength := len(args)
@@ -274,10 +538,9 @@ func sortedIntersectUintHelper(a1 []uint64, a2 []uint64) []uint64 {
 	return intersection
 }
 
-// find the intersection of two sorted arrays
-// assumes no dupes!
-// NOTE(@adam-hanna): further improve performance by sorting from smallest to largest
-// array length?
+// SortedIntersectUint64 finds the intersection of two sorted arrays.
+//
+// Deprecated: use Intersect instead.
 func SortedIntersectUint64(args ...[]uint64) []uint64 {
 	// create an array to hold the intersection and write the first array to it
 	tempIntersection := args[0]
@@ -299,7 +562,9 @@ func SortedIntersectUint64(args ...[]uint64) []uint64 {
 	return tempIntersection
 }
 
-// find the intersection of two arrays using a multidimensional array as inputs
+// IntersectUint64Arr finds the intersection of two arrays using a multidimensional array as inputs
+//
+// Deprecated: use Intersect instead.
 func IntersectUint64Arr(arr [][]uint64) []uint64 {
 	// create a map to count all the instances of the strings
 	arrLength := len(arr)
@@ -327,8 +592,9 @@ func IntersectUint64Arr(arr [][]uint64) []uint64 {
 	return tempArray
 }
 
-// find the intersection of two arrays using a multidimensional array as inputs
-// assumes no dupes and only works on arrays which are sorted
+// SortedIntersectUint64Arr finds the intersection of two arrays using a multidimensional array as inputs
+//
+// Deprecated: use Intersect instead.
 func SortedIntersectUint64Arr(arr [][]uint64) []uint64 {
 	// create an array to hold the intersection and write the first array to it
 	tempIntersection := arr[0]
@@ -350,7 +616,9 @@ func SortedIntersectUint64Arr(arr [][]uint64) []uint64 {
 	return tempIntersection
 }
 
-// find the intersection of two distinct arrays using a multidimensional array as inputs
+// DistinctIntersectUint64Arr finds the intersection of two distinct arrays using a multidimensional array as inputs
+//
+// Deprecated: use Distinct instead.
 func DistinctIntersectUint64Arr(arr [][]uint64) []uint64 {
 	// create a map to count all the instances of the strings
 	arrLength := len(arr)
@@ -377,9 +645,9 @@ func DistinctIntersectUint64Arr(arr [][]uint64) []uint64 {
 	return tempArray
 }
 
-// find the union of two arrays.
-// e.g. a1 = [1 2 2 4 6]; a2 = [2 4 5]
-// Union(a1, a2) >> [1 2 4 5 6]
+// UnionUint64 finds the union of two arrays.
+//
+// Deprecated: use Union instead.
 func UnionUint64(args ...[]uint64) []uint64 {
 	// create a temporary map to hold the contents of the arrays
 	tempMap := make(map[uint64]uint8)
@@ -400,7 +668,9 @@ func UnionUint64(args ...[]uint64) []uint64 {
 	return tempArray
 }
 
-// find the union of two arrays using a multidimensional array as inputs
+// UnionUint64Arr finds the union of two arrays using a multidimensional array as inputs
+//
+// Deprecated: use Union instead.
 func UnionUint64Arr(arr [][]uint64) []uint64 {
 	// create a temporary map to hold the contents of the arrays
 	tempMap := make(map[uint64]uint8)
@@ -421,9 +691,9 @@ func UnionUint64Arr(arr [][]uint64) []uint64 {
 	return tempArray
 }
 
-// find the difference of two arrays.
-// e.g. a1 = [1 2 2 4 6]; a2 = [2 4 5]
-// Difference(a1, a2) >> [5 6]
+// DifferenceUint64 finds the difference of two arrays.
+//
+// Deprecated: use Difference instead.
 func DifferenceUint64(args ...[]uint64) []uint64 {
 	// create a temporary map to hold the contents of the arrays
 	tempMap := make(map[uint64]int)
@@ -450,7 +720,9 @@ func DifferenceUint64(args ...[]uint64) []uint64 {
 	return tempArray
 }
 
-// find the difference of two arrays using a multidimensional array as inputs
+// DifferenceUint64Arr finds the difference of two arrays using a multidimensional array as inputs.
+//
+// Deprecated: use Difference instead.
 func DifferenceUint64Arr(arr [][]uint64) []uint64 {
 	// create a temporary map to hold the contents of the arrays
 	tempMap := make(map[uint64]int)
@@ -477,9 +749,9 @@ func DifferenceUint64Arr(arr [][]uint64) []uint64 {
 	return tempArray
 }
 
-// Remove duplicate values from one array.
-// e.g. a1 = [1 2 2 4 6]
-// Distinct(a1) >> [1 2 4 6]
+// DistinctUint64 removes duplicate values from one array.
+//
+// Deprecated: use Distinct instead.
 func DistinctUint64(arg []uint64) []uint64 {
 	tempMap := make(map[uint64]uint8)
 
@@ -493,57 +765,3 @@ func DistinctUint64(arg []uint64) []uint64 {
 	}
 	return tempArray
 }
-
-/* ***************************************************************
-*
-* THIS SECTION IS FOR a little helper benchmark script which can be
-* used to test the relative changes in performance when making
-* changes to these algorithms.
-*
-* To use, un-comment out the packages in import.
-*
-/* *************************************************************** */
-/*
-func main() {
-	aBig := make([][]uint64, 0)
-	a1 := make([]uint64, 0)
-	a2 := make([]uint64, 0)
-
-	aBig = append(aBig, a1)
-	aBig = append(aBig, a2)
-
-	i := 1
-	j := 1
-
-	for i = 1; i <= 7; i++ {
-		// create the arrays
-		arrLength := len(a1)
-		for j = 0; j < ((int(math.Pow(10, float64(i))) / 2) - arrLength); j++ {
-			a1 = append(a1, uint64(rand.Int()))
-			a2 = append(a2, uint64(rand.Int()))
-		}
-
-		// get distinct vals
-		a1 = DistinctUint64(a1)
-		a2 = DistinctUint64(a2)
-
-		// sort the arrs
-		sort.Sort(uintArray(a1))
-		sort.Sort(uintArray(a2))
-
-		// now run the test
-		t0 := time.Now()
-		SortedIntersectUint64Arr(aBig)
-		t1 := time.Now()
-		fmt.Printf("n of %v took %v to run.\n", len(a1)+len(a2), t1.Sub(t0))
-	}
-
-}
-
-// Need to create some helpers for our sort.Sort
-type uintArray []uint64
-
-func (s uintArray) Len() int           { return len(s) }
-func (s uintArray) Swap(i, j int)      { s[i], s[j] = s[j], s[i] }
-func (s uintArray) Less(i, j int) bool { return s[i] < s[j] }
-*/
