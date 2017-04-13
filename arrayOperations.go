@@ -4,8 +4,6 @@ import (
 	"reflect"
 )
 
-var tempVal reflect.Value
-
 // Distinct returns the unique vals of a slice
 //
 // [1, 1, 2, 3] >> [1, 2, 3]
@@ -13,7 +11,7 @@ func Distinct(arr interface{}) (reflect.Value, bool) {
 	// create a slice from our input interface
 	slice, ok := takeArg(arr, reflect.Slice)
 	if !ok {
-		return tempVal, ok
+		return reflect.Value{}, ok
 	}
 
 	// put the values of our slice into a map
@@ -52,12 +50,12 @@ func Intersect(arrs ...interface{}) (reflect.Value, bool) {
 	for i, arg := range arrs {
 		tempArr, ok := Distinct(arg)
 		if !ok {
-			return tempVal, ok
+			return reflect.Value{}, ok
 		}
 
 		// check to be sure the type hasn't changed
 		if i > 0 && tempArr.Index(0).Kind() != kind {
-			return tempVal, false
+			return reflect.Value{}, false
 		}
 		kind = tempArr.Index(0).Kind()
 
@@ -107,12 +105,12 @@ func Union(arrs ...interface{}) (reflect.Value, bool) {
 	for i, arg := range arrs {
 		tempArr, ok := Distinct(arg)
 		if !ok {
-			return tempVal, ok
+			return reflect.Value{}, ok
 		}
 
 		// check to be sure the type hasn't changed
 		if i > 0 && tempArr.Index(0).Kind() != kind {
-			return tempVal, false
+			return reflect.Value{}, false
 		}
 		kind = tempArr.Index(0).Kind()
 
@@ -149,12 +147,12 @@ func Difference(arrs ...interface{}) (reflect.Value, bool) {
 	for i, arg := range arrs {
 		tempArr, ok := Distinct(arg)
 		if !ok {
-			return tempVal, ok
+			return reflect.Value{}, ok
 		}
 
 		// check to be sure the type hasn't changed
 		if i > 0 && tempArr.Index(0).Kind() != kind {
-			return tempVal, false
+			return reflect.Value{}, false
 		}
 		kind = tempArr.Index(0).Kind()
 
