@@ -248,6 +248,41 @@ func TestIntersectUint64(t *testing.T) {
 	}
 }
 
+func TestDistinctIntersectUint64(t *testing.T) {
+	var myTests = []struct {
+		input1   []uint64
+		input2   []uint64
+		expected []uint64
+	}{
+		{[]uint64{1, 2, 4}, []uint64{2, 3, 5}, []uint64{2}},
+	}
+
+	for _, tt := range myTests {
+		actual := DistinctIntersectUint64(tt.input1, tt.input2)
+
+		if !testuInt64(tt.expected, actual) {
+			t.Errorf("expected: %v, received: %v", tt.expected, actual)
+		}
+	}
+}
+
+func TestDistinctIntersectUint64Arr(t *testing.T) {
+	var myTests = []struct {
+		input    [][]uint64
+		expected []uint64
+	}{
+		{[][]uint64{{1, 2, 4}, {2, 3, 5}}, []uint64{2}},
+	}
+
+	for _, tt := range myTests {
+		actual := DistinctIntersectUint64Arr(tt.input)
+
+		if !testuInt64(tt.expected, actual) {
+			t.Errorf("expected: %v, received: %v", tt.expected, actual)
+		}
+	}
+}
+
 func TestIntersectUint64Arr(t *testing.T) {
 	var myTests = []struct {
 		input    [][]uint64
@@ -258,6 +293,41 @@ func TestIntersectUint64Arr(t *testing.T) {
 
 	for _, tt := range myTests {
 		actual := IntersectUint64Arr(tt.input)
+
+		if !testuInt64(tt.expected, actual) {
+			t.Errorf("expected: %v, received: %v", tt.expected, actual)
+		}
+	}
+}
+
+func TestSortedIntersectUint64(t *testing.T) {
+	var myTests = []struct {
+		input1   []uint64
+		input2   []uint64
+		expected []uint64
+	}{
+		{[]uint64{1, 2, 4}, []uint64{2, 3, 5}, []uint64{2}},
+	}
+
+	for _, tt := range myTests {
+		actual := SortedIntersectUint64(tt.input1, tt.input2)
+
+		if !testuInt64(tt.expected, actual) {
+			t.Errorf("expected: %v, received: %v", tt.expected, actual)
+		}
+	}
+}
+
+func TestSortedIntersectUint64Arr(t *testing.T) {
+	var myTests = []struct {
+		input    [][]uint64
+		expected []uint64
+	}{
+		{[][]uint64{{1, 2, 4}, {2, 3, 5}}, []uint64{2}},
+	}
+
+	for _, tt := range myTests {
+		actual := SortedIntersectUint64Arr(tt.input)
 
 		if !testuInt64(tt.expected, actual) {
 			t.Errorf("expected: %v, received: %v", tt.expected, actual)
@@ -351,6 +421,70 @@ func TestDistinctUint64(t *testing.T) {
 			t.Errorf("expected: %v, received: %v", tt.expected, actual)
 		}
 	}
+}
+
+// Examples
+func ExampleDistinct() {
+	var a = []int{1, 1, 2, 3}
+
+	z, ok := Distinct(a)
+	if !ok {
+		fmt.Println("Cannot find distinct")
+	}
+
+	slice, ok := z.Interface().([]int)
+	if !ok {
+		fmt.Println("Cannot convert to slice")
+	}
+	fmt.Println(slice, reflect.TypeOf(slice)) // [1, 2, 3] []int
+}
+
+func ExampleIntersect() {
+	var a = []int{1, 1, 2, 3}
+	var b = []int{2, 4}
+
+	z, ok := Intersect(a, b)
+	if !ok {
+		fmt.Println("Cannot find intersect")
+	}
+
+	slice, ok := z.Interface().([]int)
+	if !ok {
+		fmt.Println("Cannot convert to slice")
+	}
+	fmt.Println(slice, reflect.TypeOf(slice)) // [2] []int
+}
+
+func ExampleUnion() {
+	var a = []int{1, 1, 2, 3}
+	var b = []int{2, 4}
+
+	z, ok := Union(a, b)
+	if !ok {
+		fmt.Println("Cannot find union")
+	}
+
+	slice, ok := z.Interface().([]int)
+	if !ok {
+		fmt.Println("Cannot convert to slice")
+	}
+	fmt.Println(slice, reflect.TypeOf(slice)) // [1, 2, 3, 4] []int
+}
+
+func ExampleDifference() {
+	var a = []int{1, 1, 2, 3}
+	var b = []int{2, 4}
+
+	z, ok := Difference(a, b)
+	if !ok {
+		fmt.Println("Cannot find difference")
+	}
+
+	slice, ok := z.Interface().([]int)
+	if !ok {
+		fmt.Println("Cannot convert to slice")
+	}
+	fmt.Println(slice, reflect.TypeOf(slice)) // [1, 3] []int
 }
 
 // Thanks! http://stackoverflow.com/a/15312097/3512709
