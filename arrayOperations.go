@@ -41,6 +41,7 @@ func Distinct(arr interface{}) (reflect.Value, bool) {
 // Intersect returns a slice of values that are present in all of the input slices
 //
 // [1, 1, 3, 4, 5, 6] & [2, 3, 6] >> [3, 6]
+//
 // [1, 1, 3, 4, 5, 6] >> [1, 3, 4, 5, 6]
 func Intersect(arrs ...interface{}) (reflect.Value, bool) {
 	// create a map to count all the instances of the slice elems
@@ -95,6 +96,7 @@ func Intersect(arrs ...interface{}) (reflect.Value, bool) {
 // Union returns a slice that contains the unique values of all the input slices
 //
 // [1, 2, 2, 4, 6] & [2, 4, 5] >> [1, 2, 4, 5, 6]
+//
 // [1, 1, 3, 4, 5, 6] >> [1, 3, 4, 5, 6]
 func Union(arrs ...interface{}) (reflect.Value, bool) {
 	// create a temporary map to hold the contents of the arrays
@@ -137,6 +139,7 @@ func Union(arrs ...interface{}) (reflect.Value, bool) {
 // Difference returns a slice of values that are only present in one of the input slices
 //
 // [1, 2, 2, 4, 6] & [2, 4, 5] >> [5, 6]
+//
 // [1, 1, 3, 4, 5, 6] >> [1, 3, 4, 5, 6]
 func Difference(arrs ...interface{}) (reflect.Value, bool) {
 	// create a temporary map to hold the contents of the arrays
