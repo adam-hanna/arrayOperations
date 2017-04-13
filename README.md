@@ -19,7 +19,7 @@ slice, ok := z.Interface().([]int)
 if !ok {
 	fmt.Println("Cannot convert to slice")
 }
-fmt.Println(slice, reflect.TypeOf(slice)) // [1, 3] []int
+fmt.Println(slice, reflect.TypeOf(slice)) // [1, 3, 4] []int
 ~~~
 
 ## API
