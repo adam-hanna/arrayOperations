@@ -1,13 +1,13 @@
 package arrayOperations
 
 import (
-	"fmt"
 	"reflect"
 )
 
 var tempVal reflect.Value
 
 // Distinct returns the unique vals of a slice
+//
 // [1, 1, 2, 3] >> [1, 2, 3]
 func Distinct(arr interface{}) (reflect.Value, bool) {
 	// create a slice from our input interface
@@ -38,23 +38,8 @@ func Distinct(arr interface{}) (reflect.Value, bool) {
 	return out, ok
 }
 
-// ExampleDistinct shows how to use Distinct
-func ExampleDistinct() {
-	var a = []int{1, 1, 2, 3}
-
-	z, ok := Distinct(a)
-	if !ok {
-		fmt.Println("Cannot find distinct")
-	}
-
-	slice, ok := z.Interface().([]int)
-	if !ok {
-		fmt.Println("Cannot convert to slice")
-	}
-	fmt.Println(slice, reflect.TypeOf(slice)) // [1, 2, 3] []int
-}
-
 // Intersect returns a slice of values that are present in all of the input slices
+//
 // [1, 1, 3, 4, 5, 6] & [2, 3, 6] >> [3, 6]
 // [1, 1, 3, 4, 5, 6] >> [1, 3, 4, 5, 6]
 func Intersect(arrs ...interface{}) (reflect.Value, bool) {
@@ -107,24 +92,8 @@ func Intersect(arrs ...interface{}) (reflect.Value, bool) {
 	return out, true
 }
 
-// ExampleIntersect shows how to use Intersect
-func ExampleIntersect() {
-	var a = []int{1, 1, 2, 3}
-	var b = []int{2, 4}
-
-	z, ok := Intersect(a, b)
-	if !ok {
-		fmt.Println("Cannot find intersect")
-	}
-
-	slice, ok := z.Interface().([]int)
-	if !ok {
-		fmt.Println("Cannot convert to slice")
-	}
-	fmt.Println(slice, reflect.TypeOf(slice)) // [2] []int
-}
-
 // Union returns a slice that contains the unique values of all the input slices
+//
 // [1, 2, 2, 4, 6] & [2, 4, 5] >> [1, 2, 4, 5, 6]
 // [1, 1, 3, 4, 5, 6] >> [1, 3, 4, 5, 6]
 func Union(arrs ...interface{}) (reflect.Value, bool) {
@@ -165,24 +134,8 @@ func Union(arrs ...interface{}) (reflect.Value, bool) {
 	return out, true
 }
 
-// ExampleUnion shows how to use Union
-func ExampleUnion() {
-	var a = []int{1, 1, 2, 3}
-	var b = []int{2, 4}
-
-	z, ok := Union(a, b)
-	if !ok {
-		fmt.Println("Cannot find union")
-	}
-
-	slice, ok := z.Interface().([]int)
-	if !ok {
-		fmt.Println("Cannot convert to slice")
-	}
-	fmt.Println(slice, reflect.TypeOf(slice)) // [1, 2, 3, 4] []int
-}
-
 // Difference returns a slice of values that are only present in one of the input slices
+//
 // [1, 2, 2, 4, 6] & [2, 4, 5] >> [5, 6]
 // [1, 1, 3, 4, 5, 6] >> [1, 3, 4, 5, 6]
 func Difference(arrs ...interface{}) (reflect.Value, bool) {
@@ -232,23 +185,6 @@ func Difference(arrs ...interface{}) (reflect.Value, bool) {
 	}
 
 	return out, true
-}
-
-// ExampleDifference shows how to use Difference
-func ExampleDifference() {
-	var a = []int{1, 1, 2, 3}
-	var b = []int{2, 4}
-
-	z, ok := Difference(a, b)
-	if !ok {
-		fmt.Println("Cannot find difference")
-	}
-
-	slice, ok := z.Interface().([]int)
-	if !ok {
-		fmt.Println("Cannot convert to slice")
-	}
-	fmt.Println(slice, reflect.TypeOf(slice)) // [1, 3] []int
 }
 
 func takeArg(arg interface{}, kind reflect.Kind) (val reflect.Value, ok bool) {
