@@ -136,7 +136,7 @@ func Union(arrs ...interface{}) (reflect.Value, bool) {
 
 // Difference returns a slice of values that are only present in one of the input slices
 //
-// [1, 2, 2, 4, 6] & [2, 4, 5] >> [5, 6]
+// [1, 2, 2, 4, 6] & [2, 4, 5] >> [1, 5, 6]
 //
 // [1, 1, 3, 4, 5, 6] >> [1, 3, 4, 5, 6]
 func Difference(arrs ...interface{}) (reflect.Value, bool) {

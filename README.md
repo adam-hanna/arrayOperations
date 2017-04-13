@@ -29,7 +29,7 @@ func Difference(arrs ...interface{}) (reflect.Value, bool)
 ~~~
  Difference returns a slice of values that are only present in one of the input slices
 
-[1, 2, 2, 4, 6] & [2, 4, 5] >> [5, 6]
+[1, 2, 2, 4, 6] & [2, 4, 5] >> [1, 5, 6]
 
 [1, 1, 3, 4, 5, 6] >> [1, 3, 4, 5, 6] 
 ~~~ go
@@ -46,7 +46,7 @@ slice, ok := z.Interface().([]int)
 if !ok {
     fmt.Println("Cannot convert to slice")
 }
-fmt.Println(slice, reflect.TypeOf(slice)) // [1, 3] []int
+fmt.Println(slice, reflect.TypeOf(slice)) // [1, 3, 4] []int
 ~~~
 
 ### [Distinct](https://godoc.org/github.com/adam-hanna/arrayOperations#Distinct)
