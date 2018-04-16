@@ -22,6 +22,7 @@ func TestDistinct(t *testing.T) {
 		{stringArr2, true, []string{"b", "c", "e"}},
 		{intArr1, true, []uint64{1, 2, 4}},
 		{intArr2, true, []uint64{2, 3, 5}},
+		{[]int{}, true, []int{}},
 	}
 
 	for _, tt := range myTests {
@@ -45,6 +46,7 @@ func TestIntersect(t *testing.T) {
 		{stringArr1, stringArr2, true, []string{"b"}},
 		{intArr1, intArr2, true, []uint64{2}},
 		{stringArr1, intArr1, false, tempInterface},
+		{[]string{}, []string{"1"}, true, []string{}},
 	}
 
 	for _, tt := range myTests {
@@ -68,6 +70,7 @@ func TestUnion(t *testing.T) {
 		{stringArr1, stringArr2, true, []string{"a", "b", "c", "d", "e"}},
 		{intArr1, intArr2, true, []uint64{1, 2, 3, 4, 5}},
 		{stringArr1, intArr1, false, tempInterface},
+		{[]string{}, []string{"1"}, true, []string{"1"}},
 	}
 
 	for _, tt := range myTests {
@@ -91,6 +94,7 @@ func TestDifference(t *testing.T) {
 		{stringArr1, stringArr2, true, []string{"a", "c", "d", "e"}},
 		{intArr1, intArr2, true, []uint64{1, 3, 4, 5}},
 		{stringArr1, intArr1, false, tempInterface},
+		{[]string{}, []string{"1"}, true, []string{"1"}},
 	}
 
 	for _, tt := range myTests {
