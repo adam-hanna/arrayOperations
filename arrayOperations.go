@@ -45,19 +45,23 @@ func Intersect(arrs ...interface{}) (reflect.Value, bool) {
 	// create a map to count all the instances of the slice elems
 	arrLength := len(arrs)
 	var kind reflect.Kind
+	var kindHasBeenSet bool
 
 	tempMap := make(map[interface{}]int)
-	for i, arg := range arrs {
+	for _, arg := range arrs {
 		tempArr, ok := Distinct(arg)
 		if !ok {
 			return reflect.Value{}, ok
 		}
 
 		// check to be sure the type hasn't changed
-		if i > 0 && tempArr.Index(0).Kind() != kind {
+		if kindHasBeenSet && tempArr.Len() > 0 && tempArr.Index(0).Kind() != kind {
 			return reflect.Value{}, false
 		}
-		kind = tempArr.Index(0).Kind()
+		if tempArr.Len() > 0 {
+			kindHasBeenSet = true
+			kind = tempArr.Index(0).Kind()
+		}
 
 		c := tempArr.Len()
 		for idx := 0; idx < c; idx++ {
@@ -100,19 +104,23 @@ func Union(arrs ...interface{}) (reflect.Value, bool) {
 	// create a temporary map to hold the contents of the arrays
 	tempMap := make(map[interface{}]uint8)
 	var kind reflect.Kind
+	var kindHasBeenSet bool
 
 	// write the contents of the arrays as keys to the map. The map values don't matter
-	for i, arg := range arrs {
+	for _, arg := range arrs {
 		tempArr, ok := Distinct(arg)
 		if !ok {
 			return reflect.Value{}, ok
 		}
 
 		// check to be sure the type hasn't changed
-		if i > 0 && tempArr.Index(0).Kind() != kind {
+		if kindHasBeenSet && tempArr.Len() > 0 && tempArr.Index(0).Kind() != kind {
 			return reflect.Value{}, false
 		}
-		kind = tempArr.Index(0).Kind()
+		if tempArr.Len() > 0 {
+			kindHasBeenSet = true
+			kind = tempArr.Index(0).Kind()
+		}
 
 		c := tempArr.Len()
 		for idx := 0; idx < c; idx++ {
@@ -143,18 +151,22 @@ func Difference(arrs ...interface{}) (reflect.Value, bool) {
 	// create a temporary map to hold the contents of the arrays
 	tempMap := make(map[interface{}]int)
 	var kind reflect.Kind
+	var kindHasBeenSet bool
 
-	for i, arg := range arrs {
+	for _, arg := range arrs {
 		tempArr, ok := Distinct(arg)
 		if !ok {
 			return reflect.Value{}, ok
 		}
 
 		// check to be sure the type hasn't changed
-		if i > 0 && tempArr.Index(0).Kind() != kind {
+		if kindHasBeenSet && tempArr.Len() > 0 && tempArr.Index(0).Kind() != kind {
 			return reflect.Value{}, false
 		}
-		kind = tempArr.Index(0).Kind()
+		if tempArr.Len() > 0 {
+			kindHasBeenSet = true
+			kind = tempArr.Index(0).Kind()
+		}
 
 		c := tempArr.Len()
 		for idx := 0; idx < c; idx++ {
