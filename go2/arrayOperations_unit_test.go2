@@ -1,0 +1,43 @@
+package go2
+
+import (
+	"fmt"
+	"testing"
+)
+
+func isEqual[T comparable](a, b []T) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for idx := range a {
+		if a[idx] != b[idx] {
+			return false
+		}
+	}
+
+	return true
+}
+
+type testDistinctInput[T comparable] []T
+type testDistinctOutput[T comparable] []T
+type testDistinct[T comparable] struct {
+	input testDistinctInput[T]
+	output testDistinctOutput[T]
+}
+
+func TestDistinct(t *testing.T) {
+		for i, tt := range []testDistinct[int] {
+			testDistinct[int]{
+				input: []int{1, 2, 3, 3, 4},
+				output: []int{1, 2, 3, 4},
+			},
+		} {
+			t.Run(fmt.Sprintf("%d", i), func(t *testing.T) {
+				actual := Distinct(tt.input)
+
+				if !isEqual(actual, tt.output) {
+					t.Errorf("expected: %v %T, received: %v %T", tt.output, tt.output, actual, actual)
+				}
+		})
+	}
+}

@@ -1,0 +1,23 @@
+package go2
+
+// Distinct returns the unique vals of a slice
+//
+// [1, 1, 2, 3] >> [1, 2, 3]
+func Distinct[T comparable](arr []T) []T {
+	// put the values of our slice into a map
+	// the key's of the map will be the slice's unique values
+	m := make(map[T]struct{})
+	for idx := range arr {
+		m[arr[idx]] = struct{}{}
+	}
+
+	// create the output slice and populate it with the map's keys
+	res := make([]T, len(m))
+	i := 0
+	for k := range m {
+		res[i] = k
+		i++
+	}
+
+	return res
+}

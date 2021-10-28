@@ -1,0 +1,4 @@
+[*.{js,jsx,ts,tsx,py,go,go2}]
+charset = utf-8
+indent_style = space
+indent_size = 2
