@@ -13,16 +13,18 @@ import (
 //line arrayOperations_unit_test.go2:1
 )
 
-//line arrayOperations_unit_test.go2:28
+//line arrayOperations_unit_test.go2:66
 func TestDistinct(t *testing.T) {
 	for i, tt := range []instantiate୦୦testDistinct୦int{instantiate୦୦testDistinct୦int{
-//line arrayOperations_unit_test.go2:31
-  input:  []int{1, 2, 3, 3, 4},
-							output: []int{1, 2, 3, 4},
+//line arrayOperations_unit_test.go2:69
+  input: instantiate୦୦testDistinctInput୦int{
+			[]int{1, 2, 3, 3, 4},
+		},
+		output: []int{1, 2, 3, 4},
 	},
 	} {
 		t.Run(fmt.Sprintf("%d", i), func(t *testing.T) {
-			actual := instantiate୦୦Distinct୦int(tt.input)
+			actual := instantiate୦୦Distinct୦int(tt.input...)
 
 			if !instantiate୦୦isEqual୦int(actual, tt.output) {
 				t.Errorf("expected: %v %T, received: %v %T", tt.output, tt.output, actual, actual)
@@ -31,23 +33,93 @@ func TestDistinct(t *testing.T) {
 	}
 }
 
-//line arrayOperations_unit_test.go2:43
+//line arrayOperations_unit_test.go2:92
+func TestIntersect(t *testing.T) {
+	for i, tt := range []instantiate୦୦testIntersect୦int{instantiate୦୦testIntersect୦int{
+//line arrayOperations_unit_test.go2:95
+  input: instantiate୦୦testIntersectInput୦int{
+			[]int{1, 2, 3, 3, 4},
+			[]int{1, 2, 4},
+			[]int{1, 3, 4},
+		},
+		output: []int{1, 4},
+	},
+	} {
+		t.Run(fmt.Sprintf("%d", i), func(t *testing.T) {
+			actual := instantiate୦୦Intersect୦int(tt.input...)
+
+			if !instantiate୦୦isEqual୦int(actual, tt.output) {
+				t.Errorf("expected: %v %T, received: %v %T", tt.output, tt.output, actual, actual)
+			}
+		})
+	}
+}
+
+//line arrayOperations_unit_test.go2:120
+func TestUnion(t *testing.T) {
+	for i, tt := range []instantiate୦୦testUnion୦int{instantiate୦୦testUnion୦int{
+//line arrayOperations_unit_test.go2:123
+  input: instantiate୦୦testUnionInput୦int{
+			[]int{1, 2, 3, 3, 4},
+			[]int{1, 2, 4, 5},
+			[]int{1, 3, 4, 6},
+		},
+		output: []int{1, 2, 3, 4, 5, 6},
+	},
+	} {
+		t.Run(fmt.Sprintf("%d", i), func(t *testing.T) {
+			actual := instantiate୦୦Union୦int(tt.input...)
+
+			if !instantiate୦୦isEqual୦int(actual, tt.output) {
+				t.Errorf("expected: %v %T, received: %v %T", tt.output, tt.output, actual, actual)
+			}
+		})
+	}
+}
+
+//line arrayOperations_unit_test.go2:148
+func TestDifference(t *testing.T) {
+	for i, tt := range []instantiate୦୦testDifference୦int{instantiate୦୦testDifference୦int{
+//line arrayOperations_unit_test.go2:151
+  input: instantiate୦୦testDifferenceInput୦int{
+			[]int{1, 2, 3, 3, 4},
+			[]int{1, 2, 5},
+			[]int{1, 3, 6},
+		},
+		output: []int{4, 5, 6},
+	},
+	} {
+		t.Run(fmt.Sprintf("%d", i), func(t *testing.T) {
+			actual := instantiate୦୦Difference୦int(tt.input...)
+
+			if !instantiate୦୦isEqual୦int(actual, tt.output) {
+				t.Errorf("expected: %v %T, received: %v %T", tt.output, tt.output, actual, actual)
+			}
+		})
+	}
+}
+
+//line arrayOperations_unit_test.go2:167
 type instantiate୦୦testDistinct୦int struct {
-//line arrayOperations_unit_test.go2:24
+//line arrayOperations_unit_test.go2:62
  input  instantiate୦୦testDistinctInput୦int
 						output instantiate୦୦testDistinctOutput୦int
 }
+//line arrayOperations_unit_test.go2:64
+type instantiate୦୦testDistinctInput୦int [][]int
 
 //line arrayOperations.go2:6
-func instantiate୦୦Distinct୦int(arr []int,) []int {
+func instantiate୦୦Distinct୦int(arrs ...[]int,) []int {
 
 //line arrayOperations.go2:9
  m := make(map[int]struct{})
-	for idx := range arr {
-		m[arr[idx]] = struct{}{}
+	for idx1 := range arrs {
+		for idx2 := range arrs[idx1] {
+			m[arrs[idx1][idx2]] = struct{}{}
+		}
 	}
 
-//line arrayOperations.go2:15
+//line arrayOperations.go2:17
  res := make([]int, len(m))
 	i := 0
 	for k := range m {
@@ -62,8 +134,46 @@ func instantiate୦୦isEqual୦int(a, b []int,) bool {
 	if len(a) != len(b) {
 		return false
 	}
+
+	m1 := make(map[int]int)
+	var (
+		count int
+		ok    bool
+	)
 	for idx := range a {
-		if a[idx] != b[idx] {
+		count, ok = m1[a[idx]]
+		if !ok {
+			m1[a[idx]] = 1
+		} else {
+			m1[a[idx]] = count + 1
+		}
+	}
+
+	m2 := make(map[int]int)
+	for idx := range b {
+		count, ok = m2[b[idx]]
+		if !ok {
+			m2[b[idx]] = 1
+		} else {
+			m2[b[idx]] = count + 1
+		}
+	}
+
+	for k, v := range m1 {
+		count, ok = m2[k]
+		if !ok {
+			return false
+		}
+		if count != v {
+			return false
+		}
+	}
+	for k, v := range m2 {
+		count, ok = m1[k]
+		if !ok {
+			return false
+		}
+		if count != v {
 			return false
 		}
 	}
@@ -71,12 +181,135 @@ func instantiate୦୦isEqual୦int(a, b []int,) bool {
 	return true
 }
 
-//line arrayOperations_unit_test.go2:19
-type instantiate୦୦testDistinctInput୦int []int
-//line arrayOperations_unit_test.go2:29
-type instantiate୦୦testDistinctOutput୦int []int
+//line arrayOperations_unit_test.go2:57
+type instantiate୦୦testIntersect୦int struct {
+//line arrayOperations_unit_test.go2:88
+ input instantiate୦୦testIntersectInput୦int
+	output instantiate୦୦testIntersectOutput୦int
+}
+//line arrayOperations_unit_test.go2:90
+type instantiate୦୦testIntersectInput୦int [][]int
 
-//line arrayOperations_unit_test.go2:29
+//line arrayOperations.go2:32
+func instantiate୦୦Intersect୦int(arrs ...[]int,) []int {
+	m := make(map[int]int)
+
+	var (
+		tmpArr []int
+		count  int
+		ok     bool
+	)
+	for idx1 := range arrs {
+		tmpArr = instantiate୦୦Distinct୦int(arrs[idx1])
+
+		for idx2 := range tmpArr {
+			count, ok = m[tmpArr[idx2]]
+			if !ok {
+				m[tmpArr[idx2]] = 1
+			} else {
+				m[tmpArr[idx2]] = count + 1
+			}
+		}
+	}
+
+	var (
+		ret     []int
+		lenArrs int = len(arrs)
+	)
+	for k, v := range m {
+		if v == lenArrs {
+			ret = append(ret, k)
+		}
+	}
+
+	return ret
+}
+
+//line arrayOperations.go2:64
+type instantiate୦୦testUnion୦int struct {
+//line arrayOperations_unit_test.go2:116
+ input instantiate୦୦testUnionInput୦int
+	output instantiate୦୦testUnionOutput୦int
+}
+//line arrayOperations_unit_test.go2:118
+type instantiate୦୦testUnionInput୦int [][]int
+
+//line arrayOperations.go2:71
+func instantiate୦୦Union୦int(arrs ...[]int,) []int {
+	m := make(map[int]struct{})
+
+	var tmpArr []int
+	for idx := range arrs {
+		tmpArr = instantiate୦୦Distinct୦int(arrs[idx])
+
+		for idx2 := range tmpArr {
+			m[tmpArr[idx2]] = struct{}{}
+		}
+	}
+
+	ret := make([]int, len(m))
+	i := 0
+	for k := range m {
+		ret[i] = k
+		i++
+	}
+
+	return ret
+}
+
+//line arrayOperations.go2:91
+type instantiate୦୦testDifference୦int struct {
+//line arrayOperations_unit_test.go2:144
+ input instantiate୦୦testDifferenceInput୦int
+	output instantiate୦୦testDifferenceOutput୦int
+}
+//line arrayOperations_unit_test.go2:146
+type instantiate୦୦testDifferenceInput୦int [][]int
+
+//line arrayOperations.go2:98
+func instantiate୦୦Difference୦int(arrs ...[]int,) []int {
+	m := make(map[int]int)
+
+	var (
+		tmpArr []int
+		count  int
+		ok     bool
+	)
+	for idx1 := range arrs {
+		tmpArr = instantiate୦୦Distinct୦int(arrs[idx1])
+
+		for idx2 := range tmpArr {
+			count, ok = m[tmpArr[idx2]]
+			if !ok {
+				m[tmpArr[idx2]] = 1
+			} else {
+				m[tmpArr[idx2]] = count + 1
+			}
+		}
+	}
+
+	var (
+		ret []int
+	)
+	for k, v := range m {
+		if v == 1 {
+			ret = append(ret, k)
+		}
+	}
+
+	return ret
+}
+
+//line arrayOperations.go2:129
+type instantiate୦୦testDistinctOutput୦int []int
+//line arrayOperations_unit_test.go2:67
+type instantiate୦୦testIntersectOutput୦int []int
+//line arrayOperations_unit_test.go2:93
+type instantiate୦୦testUnionOutput୦int []int
+//line arrayOperations_unit_test.go2:121
+type instantiate୦୦testDifferenceOutput୦int []int
+
+//line arrayOperations_unit_test.go2:149
 var _ = fmt.Errorf
-//line arrayOperations_unit_test.go2:29
+//line arrayOperations_unit_test.go2:149
 var _ = testing.AllocsPerRun
