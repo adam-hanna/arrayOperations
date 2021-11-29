@@ -57,6 +57,37 @@ func isEqual[T comparable](a, b []T) bool {
 	return true
 }
 
+func findOneGuard(i int) bool {
+  return i % 2 == 0
+}
+
+func TestFindOne(t *testing.T) {
+  t.Run("has elements", func(t *testing.T) {
+    arr := []int{1,2,3,4}
+    el, ok := FindOne(arr, findOneGuard)
+    expected := 2
+    
+    if !ok {
+      t.Errorf("expected %v, received %v", true, ok)
+    }
+    if el != expected {
+      t.Errorf("expected %v, received %v", expected, el)
+    }
+  })
+  t.Run("no elements", func(t *testing.T) {
+    arr := []int{1,3,5}
+    el, ok := FindOne(arr, findOneGuard)
+    expected := 0
+    
+    if ok {
+      t.Errorf("expected %v, received %v", false, ok)
+    }
+    if el != expected {
+      t.Errorf("expected %v, received %v", expected, el)
+    }
+  })
+}
+
 func countAnimals(state map[string]int, animal string) map[string]int {
   count, ok := state[animal]
   if !ok {

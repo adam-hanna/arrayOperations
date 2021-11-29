@@ -1,5 +1,25 @@
 package go2
 
+// FindOne iterates through an array applying the guard function to each element and returns the first element that passes.
+// If no such element is found, it returns the zero value and false.
+//
+// arr := []int{1,2,3,4}
+// func isEven(i int) bool {
+//   return i % 2 == 0
+// }
+// el := FindOne(arr, isEven)
+// fmt.Println(el)
+// // output: [2]
+func FindOne[T any](arr []T, guard func(T) bool) (T, bool) {
+  for idx := range arr {
+    if guard(arr[idx]) {
+      return arr[idx], true
+    }
+  }
+  
+  return *new(T), false
+}
+
 // Reduce iterates through an array applying the function to each element and the cumulative value and the final state of the cumulative value
 //
 // arr := []string{"cat","dog","cat","cow"}
