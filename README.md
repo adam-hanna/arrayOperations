@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/adam-hanna/arrayOperations.svg?branch=master)](https://travis-ci.org/adam-hanna/arrayOperations) [![Coverage Status](https://coveralls.io/repos/github/adam-hanna/arrayOperations/badge.svg?branch=master)](https://coveralls.io/github/adam-hanna/arrayOperations?branch=master) [![Go Report Card](https://goreportcard.com/badge/github.com/adam-hanna/arrayOperations)](https://goreportcard.com/report/github.com/adam-hanna/arrayOperations) [![GoDoc](https://godoc.org/github.com/adam-hanna/arrayOperations?status.svg)](https://godoc.org/github.com/adam-hanna/arrayOperations)
 
 # arrayOperations
-Small library for performing union, intersect, difference and distinct operations on slices in goLang
+Small utility library for performing common operations on slices in golang.
 
 I don't promise that these are optimized (not even close!), but they work :)
 
@@ -10,125 +10,33 @@ I don't promise that these are optimized (not even close!), but they work :)
 var a = []int{1, 1, 2, 3}
 var b = []int{2, 4}
 
-z, ok := Difference(a, b)
-if !ok {
-	fmt.Println("Cannot find difference")
-}
+diff := Difference[int](a, b)
 
-slice, ok := z.Interface().([]int)
-if !ok {
-	fmt.Println("Cannot convert to slice")
-}
-fmt.Println(slice, reflect.TypeOf(slice)) // [1, 3, 4] []int
+// []int{1, 3}
+fmt.Println(diff)
 ~~~
 
 ## API
-### [Difference](https://godoc.org/github.com/adam-hanna/arrayOperations#Difference)
-~~~ go
-func Difference(arrs ...interface{}) (reflect.Value, bool)
-~~~
- Difference returns a slice of values that are only present in one of the input slices
 
-[1, 2, 2, 4, 6] & [2, 4, 5] >> [1, 5, 6]
+FindOne[T any](arr []T, guard func(T) bool) (T, bool)
 
-[1, 1, 3, 4, 5, 6] >> [1, 3, 4, 5, 6] 
-~~~ go
-// EXAMPLE
-var a = []int{1, 1, 2, 3}
-var b = []int{2, 4}
+Reduce[T, A any](arr []T, fn func(A, T) A, init A) A
 
-z, ok := Difference(a, b)
-if !ok {
-    fmt.Println("Cannot find difference")
-}
+Filter[T any](arr []T, guard func(T) bool) []T
 
-slice, ok := z.Interface().([]int)
-if !ok {
-    fmt.Println("Cannot convert to slice")
-}
-fmt.Println(slice, reflect.TypeOf(slice)) // [1, 3, 4] []int
-~~~
+Map[T any](arr []T, transform func(T) T) []T
 
-### [Distinct](https://godoc.org/github.com/adam-hanna/arrayOperations#Distinct)
-~~~ go
-func Distinct(arr interface{}) (reflect.Value, bool)
-~~~
+Distinct[T comparable](arrs ...[]T) []T
 
-Distinct returns the unique vals of a slice
+Intersect[T comparable](arrs ...[]T) []T
 
-[1, 1, 2, 3] >> [1, 2, 3] 
+Union[T comparable](arrs ...[]T) []T
 
-~~~ go
-// EXAMPLE
-var a = []int{1, 1, 2, 3}
+Difference[T comparable](arrs ...[]T) []T
 
-z, ok := Distinct(a)
-if !ok {
-    fmt.Println("Cannot find distinct")
-}
+## Docs
 
-slice, ok := z.Interface().([]int)
-if !ok {
-    fmt.Println("Cannot convert to slice")
-}
-fmt.Println(slice, reflect.TypeOf(slice)) // [1, 2, 3] []int
-~~~
-
-### [Intersect](https://godoc.org/github.com/adam-hanna/arrayOperations#Intersect)
-~~~ go
-func Intersect(arrs ...interface{}) (reflect.Value, bool)
-~~~
-
-Intersect returns a slice of values that are present in all of the input slices
-
-[1, 1, 3, 4, 5, 6] & [2, 3, 6] >> [3, 6]
-
-[1, 1, 3, 4, 5, 6] >> [1, 3, 4, 5, 6] 
-
-~~~ go
-// EXAMPLE
-var a = []int{1, 1, 2, 3}
-var b = []int{2, 4}
-
-z, ok := Intersect(a, b)
-if !ok {
-    fmt.Println("Cannot find intersect")
-}
-
-slice, ok := z.Interface().([]int)
-if !ok {
-    fmt.Println("Cannot convert to slice")
-}
-fmt.Println(slice, reflect.TypeOf(slice)) // [2] []int
-~~~
-
-### [Union](https://godoc.org/github.com/adam-hanna/arrayOperations#Union)
-~~~ go
-func Union(arrs ...interface{}) (reflect.Value, bool)
-~~~
-
-Union returns a slice that contains the unique values of all the input slices
-
-[1, 2, 2, 4, 6] & [2, 4, 5] >> [1, 2, 4, 5, 6]
-
-[1, 1, 3, 4, 5, 6] >> [1, 3, 4, 5, 6] 
-
-~~~ go
-// EXAMPLE
-var a = []int{1, 1, 2, 3}
-var b = []int{2, 4}
-
-z, ok := Union(a, b)
-if !ok {
-    fmt.Println("Cannot find union")
-}
-
-slice, ok := z.Interface().([]int)
-if !ok {
-    fmt.Println("Cannot convert to slice")
-}
-fmt.Println(slice, reflect.TypeOf(slice)) // [1, 2, 3, 4] []int
-~~~
+Docs are available, [here](https://pkg.go.dev/github.com/adam-hanna/arrayOperations)
 
 ## License
 MIT
