@@ -11,13 +11,13 @@ package go2
 // fmt.Println(el)
 // // output: [2]
 func FindOne[T any](arr []T, guard func(T) bool) (T, bool) {
-  for idx := range arr {
-    if guard(arr[idx]) {
-      return arr[idx], true
-    }
-  }
-  
-  return *new(T), false
+	for idx := range arr {
+		if guard(arr[idx]) {
+			return arr[idx], true
+		}
+	}
+
+	return *new(T), false
 }
 
 // Reduce iterates through an array applying the function to each element and the cumulative value and the final state of the cumulative value
@@ -38,13 +38,13 @@ func FindOne[T any](arr []T, guard func(T) bool) (T, bool) {
 // fmt.Println(finalState)
 // // output: map["cat":2 "dog":1 "cow":1]
 func Reduce[T, A any](arr []T, fn func(A, T) A, init A) A {
-  ret := init
+	ret := init
 
-  for idx := range arr {
-    ret = fn(ret, arr[idx])
-  }
-  
-  return ret
+	for idx := range arr {
+		ret = fn(ret, arr[idx])
+	}
+
+	return ret
 }
 
 // Filter iterates through an array applying the guard function to each element and returns the elements that pass
@@ -57,15 +57,15 @@ func Reduce[T, A any](arr []T, fn func(A, T) A, init A) A {
 // fmt.Println(newArr)
 // // output: [0,2,4]
 func Filter[T any](arr []T, guard func(T) bool) []T {
-  var ret []T
+	var ret []T
 
-  for idx := range arr {
-    if guard(arr[idx]) {
-      ret = append(ret, arr[idx])
-    }
-  }
-  
-  return ret
+	for idx := range arr {
+		if guard(arr[idx]) {
+			ret = append(ret, arr[idx])
+		}
+	}
+
+	return ret
 }
 
 // Map iterates through an array applying the transform function to each element and returns the modified array
@@ -78,19 +78,19 @@ func Filter[T any](arr []T, guard func(T) bool) []T {
 // fmt.Println(newArr)
 // // output: [11, 12, 13]
 func Map[T any](arr []T, transform func(T) T) []T {
-  ret := make([]T, len(arr))
+	ret := make([]T, len(arr))
 
-  for idx := range arr {
-    ret[idx] = transform(arr[idx])
-  }
-  
-  return ret
+	for idx := range arr {
+		ret[idx] = transform(arr[idx])
+	}
+
+	return ret
 }
 
 // Distinct returns the unique vals of a slice
 //
 // [1, 1, 2, 3] >> [1, 2, 3]
-func Distinct[T comparable](arrs... []T) []T {
+func Distinct[T comparable](arrs ...[]T) []T {
 	// put the values of our slice into a map
 	// the key's of the map will be the slice's unique values
 	m := make(map[T]struct{})
@@ -121,8 +121,8 @@ func Intersect[T comparable](arrs ...[]T) []T {
 
 	var (
 		tmpArr []T
-		count int
-		ok bool
+		count  int
+		ok     bool
 	)
 	for idx1 := range arrs {
 		tmpArr = Distinct(arrs[idx1])
@@ -138,7 +138,7 @@ func Intersect[T comparable](arrs ...[]T) []T {
 	}
 
 	var (
-		ret []T
+		ret     []T
 		lenArrs int = len(arrs)
 	)
 	for k, v := range m {
@@ -187,8 +187,8 @@ func Difference[T comparable](arrs ...[]T) []T {
 
 	var (
 		tmpArr []T
-		count int
-		ok bool
+		count  int
+		ok     bool
 	)
 	for idx1 := range arrs {
 		tmpArr = Distinct(arrs[idx1])
