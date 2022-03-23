@@ -3,13 +3,12 @@ package go2
 // FindOne iterates through an array applying the guard function to each element and returns the first element that passes.
 // If no such element is found, it returns the zero value and false.
 //
-// arr := []int{1,2,3,4}
-// func isEven(i int) bool {
-//   return i % 2 == 0
-// }
-// el := FindOne(arr, isEven)
-// fmt.Println(el)
-// // output: [2]
+// 	arr := []int{1,2,3,4}
+// 	func isEven(i int) bool {
+// 	  return i % 2 == 0
+// 	}
+// 	fmt.Println(FindOne[int](arr, isEven))
+// 	// output: [2]
 func FindOne[T any](arr []T, guard func(T) bool) (T, bool) {
 	for idx := range arr {
 		if guard(arr[idx]) {
@@ -22,21 +21,20 @@ func FindOne[T any](arr []T, guard func(T) bool) (T, bool) {
 
 // Reduce iterates through an array applying the function to each element and the cumulative value and the final state of the cumulative value
 //
-// arr := []string{"cat","dog","cat","cow"}
-// func countAnimals(state map[string]int, animal string) map[string]int {
-//   count, ok := state[animal]
-//   if !ok {
-//     state[animal] = 0
-//     return state
-//   }
+// 	arr := []string{"cat","dog","cat","cow"}
+// 	func countAnimals(state map[string]int, animal string) map[string]int {
+// 	  count, ok := state[animal]
+// 	  if !ok {
+// 	    state[animal] = 0
+// 	    return state
+// 	  }
 //
-//   state[animal] = count + 1
-//   return state
-// }
-// initialState := make([string]int)
-// finalState := Reduce(arr, countAnimals, initialState)
-// fmt.Println(finalState)
-// // output: map["cat":2 "dog":1 "cow":1]
+// 	  state[animal] = count + 1
+// 	  return state
+// 	}
+// 	initialState := make(map[string]int)
+// 	fmt.Println(Reduce[string, map[string]int](arr, countAnimals, initialState))
+// 	// output: map["cat":2 "dog":1 "cow":1]
 func Reduce[T, A any](arr []T, fn func(A, T) A, init A) A {
 	ret := init
 
@@ -49,13 +47,12 @@ func Reduce[T, A any](arr []T, fn func(A, T) A, init A) A {
 
 // Filter iterates through an array applying the guard function to each element and returns the elements that pass
 //
-// arr := []int{0,1,2,3,4}
-// func isEven(i int) bool {
-//   return i % 2 == 0
-// }
-// newArr := Filter(arr, isEven)
-// fmt.Println(newArr)
-// // output: [0,2,4]
+// 	arr := []int{0,1,2,3,4}
+// 	func isEven(i int) bool {
+// 	  return i % 2 == 0
+// 	}
+// 	fmt.Println(Filter[int](arr, isEven))
+// 	// output: [0,2,4]
 func Filter[T any](arr []T, guard func(T) bool) []T {
 	var ret []T
 
@@ -70,13 +67,12 @@ func Filter[T any](arr []T, guard func(T) bool) []T {
 
 // Map iterates through an array applying the transform function to each element and returns the modified array
 //
-// arr := []int{1,2,3}
-// func addTen(i int) int {
-//   return i + 10
-// }
-// newArr := Map(arr, addTen)
-// fmt.Println(newArr)
-// // output: [11, 12, 13]
+// 	arr := []int{1,2,3}
+// 	func addTen(i int) int {
+// 	  return i + 10
+// 	}
+// 	fmt.Println(Map[int](arr, addTen))
+// 	// output: [11, 12, 13]
 func Map[T any](arr []T, transform func(T) T) []T {
 	ret := make([]T, len(arr))
 
@@ -89,7 +85,8 @@ func Map[T any](arr []T, transform func(T) T) []T {
 
 // Distinct returns the unique vals of a slice
 //
-// [1, 1, 2, 3] >> [1, 2, 3]
+// 	fmt.Println(Distinct[int]([]int{1, 1, 2, 3}))
+// 	// output: [1, 2, 3]
 func Distinct[T comparable](arrs ...[]T) []T {
 	// put the values of our slice into a map
 	// the key's of the map will be the slice's unique values
@@ -113,9 +110,15 @@ func Distinct[T comparable](arrs ...[]T) []T {
 
 // Intersect returns a slice of values that are present in all of the input slices
 //
-// [1, 1, 3, 4, 5, 6] & [2, 3, 6] >> [3, 6]
+//  // example #1
+//  a := []int{1, 1, 3, 4, 5, 6}
+//  b := []int{2, 3, 6} 
+//  fmt.Println(Intersect[int](a, b))
+//  // output: []int{3, 6}
 //
-// [1, 1, 3, 4, 5, 6] >> [1, 3, 4, 5, 6]
+//  // example #2
+//  fmt.Println(Intersect[int]([]int{1, 1, 3, 4, 5, 6}))
+//  // output: []int{1, 3, 4, 5, 6}
 func Intersect[T comparable](arrs ...[]T) []T {
 	m := make(map[T]int)
 
@@ -152,9 +155,15 @@ func Intersect[T comparable](arrs ...[]T) []T {
 
 // Union returns a slice that contains the unique values of all the input slices
 //
-// [1, 2, 2, 4, 6] & [2, 4, 5] >> [1, 2, 4, 5, 6]
+//  // example #1
+//  a := []int{1, 2, 2, 4, 6}
+//  b := []int{2, 4, 5}
+//  fmt.Println(Union[int](a, b))
+//  // output: []int{1, 2, 4, 5, 6}
 //
-// [1, 1, 3, 4, 5, 6] >> [1, 3, 4, 5, 6]
+//  // example #2
+//  fmt.Println(Union[int]([]int{1, 1, 3, 4, 5, 6}))
+//  // output: []int{1, 3, 4, 5, 6}
 func Union[T comparable](arrs ...[]T) []T {
 	m := make(map[T]struct{})
 
@@ -179,9 +188,15 @@ func Union[T comparable](arrs ...[]T) []T {
 
 // Difference returns a slice of values that are only present in one of the input slices
 //
-// [1, 2, 2, 4, 6] & [2, 4, 5] >> [1, 5, 6]
+//  // example #1
+//  a := []int{1, 2, 2, 4, 6}
+//  b := []int{2, 4, 5}
+//  fmt.Println(Difference[int](a, b))
+//  // output: []int{1, 5, 6}
 //
-// [1, 1, 3, 4, 5, 6] >> [1, 3, 4, 5, 6]
+//  // example #2
+//  fmt.Println(Difference[int]([]int{1, 1, 3, 4, 5, 6}))
+//  // output: []int{1, 3, 4, 5, 6}
 func Difference[T comparable](arrs ...[]T) []T {
 	m := make(map[T]int)
 
