@@ -8,7 +8,7 @@ package go2
 // 	  return i % 2 == 0
 // 	}
 // 	fmt.Println(FindOne[int](arr, isEven))
-// 	// output: [2]
+// 	// output: [2, 4]
 func FindOne[T any](arr []T, guard func(T) bool) (T, bool) {
 	for idx := range arr {
 		if guard(arr[idx]) {

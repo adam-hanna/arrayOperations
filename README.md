@@ -12,7 +12,7 @@ var b = []int{2, 4}
 
 diff := Difference[int](a, b)
 
-// []int{1, 3}
+// []int{1, 3, 4}
 fmt.Println(diff)
 ~~~
 
