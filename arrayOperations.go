@@ -25,7 +25,7 @@ func FindOne[T any](arr []T, guard func(T) bool) (T, bool) {
 // 	func countAnimals(state map[string]int, animal string) map[string]int {
 // 	  count, ok := state[animal]
 // 	  if !ok {
-// 	    state[animal] = 0
+// 	    state[animal] = 1
 // 	    return state
 // 	  }
 //
